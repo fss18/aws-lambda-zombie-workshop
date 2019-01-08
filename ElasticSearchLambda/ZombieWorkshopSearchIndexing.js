@@ -14,7 +14,7 @@ var creds = new AWS.EnvironmentCredentials('AWS');
 
 /* Lambda "main": Execution begins here */
 exports.handler = function(event, context) {
-    
+
         console.log(JSON.stringify(event, null, '  '));
         event.Records.forEach(function(record) {
             if (typeof record.dynamodb.NewImage != 'undefined')
@@ -48,6 +48,7 @@ function postToES(doc, context) {
     req.region = esDomain.region;
     req.headers['presigned-expires'] = false;
     req.headers['Host'] = endpoint.host;
+    req.headers['Content-Type'] = 'application/json'
     req.body = doc;
 
     console.log('Creating the Signer for the post request');

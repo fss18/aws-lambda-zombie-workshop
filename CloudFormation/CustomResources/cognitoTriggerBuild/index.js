@@ -11,7 +11,7 @@ exports.handler = function(event, context, callback) {
 
   var lambdaBucket = event.ResourceProperties.LambdaFunctionBucket; // the workshop bucket where the Cogntio Trigger function zip is located.
   var stackName = event.ResourceProperties.StackName;
-  var region = event.ResourceProperties.region; // Region where the stack was launched. 
+  var region = event.ResourceProperties.region; // Region where the stack was launched.
   var lambda = new AWS.Lambda({region: event.ResourceProperties.CognitoRegion}); // Set Lambda region to the local location where Cognito was built. CFN passes this as a parameter.
   var iamRole = event.ResourceProperties.IamRole; // the iam role to associate with the function we're creating.
 
@@ -33,7 +33,7 @@ exports.handler = function(event, context, callback) {
       FunctionName: stackName + '-CognitoLambdaTrigger' + '-' + region,
       Handler: 'index.handler',
       Role: iamRole,
-      Runtime: 'nodejs4.3',
+      Runtime: 'nodejs8.10',
       Timeout: '120'
     };
     lambda.createFunction(params, function(err, data) {
