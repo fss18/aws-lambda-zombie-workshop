@@ -44,6 +44,7 @@ exports.handler = function(event, context) {
         }
     };
 
+    slackPut(DDBparams);
     dynamoPut(DDBparams);
 };
 
@@ -64,12 +65,32 @@ function dynamoPut(params){
     ddb.putItem(params, dynamoCallback);
 }
 
+function slackPut(params){
+    console.log("Putting item into Slack");
+    const { IncomingWebhook } = require('@slack/client');
+    const url = process.env.SLACK_WEBHOOK_URL;
+    const webhook = new IncomingWebhook(url);
+
+    // Send simple text to the webhook channel
+    webhook.send(params.Item.message.S, slackCallback);
+}
+
+function slackCallback(err,response) {
+    if (err) {
+        console.log('Error:', err);
+        return theContext.fail("There was an error.");
+    } else {
+        console.log('Message sent: ', response);
+        //return theContext.succeed();
+    }
+}
+
 function dynamoCallback(err, response) {
   if (err) {
       console.log('error' + err, err.stack); // an error occurred
       return theContext.fail("There was an error.");
   } else {
       console.log('Success: ' + '{Sender: ' + from + ', ' + 'Message: ' + message + '}');
-      return theContext.succeed();
+      //return theContext.succeed();
   }
 }
